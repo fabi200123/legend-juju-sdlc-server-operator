@@ -76,3 +76,21 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
 
     def test_upgrade_charm(self):
         self._test_upgrade_charm()
+
+    def test_get_sdlc_service_url(self):
+        self.harness.set_leader(True)
+        self.harness.begin_with_initial_hooks()
+
+        # Test without external-hostname config.
+        actual_url = self.harness.charm._get_sdlc_service_url()
+
+        expected_url = "http://%s%s" % (self.harness.charm.app.name, charm.APPLICATION_ROOT_PATH)
+        self.assertEqual(expected_url, actual_url)
+
+        # Test with external-hostname config.
+        hostname = "foo.lish"
+        self.harness.update_config({"external-hostname": hostname})
+        actual_url = self.harness.charm._get_sdlc_service_url()
+
+        expected_url = "http://%s%s" % (hostname, charm.APPLICATION_ROOT_PATH)
+        self.assertEqual(expected_url, actual_url)

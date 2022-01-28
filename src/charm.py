@@ -18,7 +18,7 @@ LEGEND_DB_RELATION_NAME = "legend-db"
 LEGEND_GITLAB_RELATION_NAME = "legend-sdlc-gitlab"
 LEGEND_STUDIO_RELATION_NAME = "legend-sdlc"
 
-SDLC_SERVICE_URL_FORMAT = "%(schema)s://%(host)s:%(port)s%(path)s"
+SDLC_SERVICE_URL_FORMAT = "%(schema)s://%(host)s%(path)s"
 SDLC_CONFIG_FILE_CONTAINER_LOCAL_PATH = "/sdlc-config.yaml"
 SDLC_MAIN_GITLAB_REDIRECT_URL = "%(base_url)s/auth/callback"
 SDLC_GITLAB_REDIRECT_URI_FORMATS = [
@@ -127,13 +127,12 @@ class LegendSDLCServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCharm
         return LEGEND_DB_RELATION_NAME
 
     def _get_sdlc_service_url(self):
-        ip_address = legend_operator_base.get_ip_address()
+        svc_hostname = self.model.config["external-hostname"] or self.app.name
         return SDLC_SERVICE_URL_FORMAT % (
             {
                 # NOTE(aznashwan): we always return the plain HTTP endpoint:
                 "schema": "http",
-                "host": ip_address,
-                "port": APPLICATION_CONNECTOR_PORT_HTTP,
+                "host": svc_hostname,
                 "path": APPLICATION_ROOT_PATH,
             }
         )
