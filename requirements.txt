@@ -2,3 +2,5 @@ git+https://github.com/canonical/operator.git
 pyjks
 pyOpenSSL
 PyYAML
+lightkube
+lightkube-models

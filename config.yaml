@@ -18,6 +18,14 @@ options:
       String identifier of the log level to be used for incoming requests.
       Must be one of INFO, WARN, DEBUG, or TRACE, or OFF.
 
+  ### Nginx Ingress Integrator-related options:
+  external-hostname:
+    type: string
+    default: ""
+    description: |
+      String representing the DNS name this Application should respond to.
+      By default, this will be the Application's name.
+
   ### Gitlab-related options:
   gitlab-create-new-projects-as-public:
     type: boolean

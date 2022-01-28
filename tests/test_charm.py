@@ -73,3 +73,6 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
             rel.data[self.harness.charm.app],
             {"legend-sdlc-url": self.harness.charm._get_sdlc_service_url()},
         )
+
+    def test_upgrade_charm(self):
+        self._test_upgrade_charm()
