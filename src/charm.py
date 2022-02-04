@@ -32,6 +32,8 @@ TRUSTSTORE_CONTAINER_LOCAL_PATH = "/truststore.jks"
 APPLICATION_CONNECTOR_PORT_HTTP = 7070
 APPLICATION_ADMIN_CONNECTOR_PORT_HTTP = 7076
 APPLICATION_ROOT_PATH = "/api"
+# NOTE(claudiub): We're using the same route as the APPLICATION_ROOT_PATH.
+SDLC_INGRESS_ROUTE = "/api"
 
 APPLICATION_LOGGING_FORMAT = "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%thread] %c - %m%n"
 
@@ -57,6 +59,10 @@ class LegendSDLCServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCharm
     @classmethod
     def _get_application_connector_port(cls):
         return APPLICATION_CONNECTOR_PORT_HTTP
+
+    @classmethod
+    def _get_ingress_routes(cls) -> str:
+        return SDLC_INGRESS_ROUTE
 
     @classmethod
     def _get_workload_container_name(cls):
