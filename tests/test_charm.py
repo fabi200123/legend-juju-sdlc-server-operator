@@ -74,6 +74,9 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
             {"legend-sdlc-url": self.harness.charm._get_sdlc_service_url()},
         )
 
+    def test_config_changed_update_gitlab_relation(self):
+        self._test_update_config_gitlab_relation()
+
     def test_config_changed_update_studio_relation(self):
         self.harness.set_leader(True)
         self.harness.begin_with_initial_hooks()

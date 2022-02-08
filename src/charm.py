@@ -280,6 +280,7 @@ class LegendSDLCServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCharm
         return {SDLC_CONFIG_FILE_CONTAINER_LOCAL_PATH: yaml.dump(sdlc_config)}
 
     def _set_studio_relation_data(self, relation=None):
+        """Updates Legend Studio relation with the current SDLC Service URL."""
         relation = relation or self._get_relation(LEGEND_STUDIO_RELATION_NAME)
         if not relation:
             return
