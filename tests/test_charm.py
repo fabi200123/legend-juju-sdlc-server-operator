@@ -74,6 +74,30 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
             {"legend-sdlc-url": self.harness.charm._get_sdlc_service_url()},
         )
 
+    def test_get_legend_gitlab_redirect_uris(self):
+        self.harness.begin()
+        actual_uris = self.harness.charm._get_legend_gitlab_redirect_uris()
+
+        base_url = "http://%s%s" % (
+            self.harness.charm.app.name,
+            charm.SDLC_INGRESS_ROUTE,
+        )
+        expected_url_api = "%s/auth/callback" % base_url
+        expected_url_pac4j = "%s/pac4j/login/callback" % base_url
+        self.assertEqual([expected_url_api, expected_url_pac4j], actual_uris)
+
+        # Test with enable-tls set.
+        self.harness.update_config({"enable-tls": True})
+        actual_uris = self.harness.charm._get_legend_gitlab_redirect_uris()
+
+        base_url = "https://%s%s" % (
+            self.harness.charm.app.name,
+            charm.SDLC_INGRESS_ROUTE,
+        )
+        expected_url_api = "%s/auth/callback" % base_url
+        expected_url_pac4j = "%s/pac4j/login/callback" % base_url
+        self.assertEqual([expected_url_api, expected_url_pac4j], actual_uris)
+
     def test_config_changed_update_gitlab_relation(self):
         self._test_update_config_gitlab_relation()
 
@@ -86,12 +110,12 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
 
         # Update the config, and expect the relation data to be updated.
         hostname = "foo.lish"
-        self.harness.update_config({"external-hostname": hostname})
+        self.harness.update_config({"external-hostname": hostname, "enable-tls": True})
 
         rel = self.harness.charm.framework.model.get_relation(
             charm.LEGEND_STUDIO_RELATION_NAME, rel_id
         )
-        expected_url = "http://%s%s" % (hostname, charm.APPLICATION_ROOT_PATH)
+        expected_url = "https://%s%s" % (hostname, charm.APPLICATION_ROOT_PATH)
         self.assertEqual(
             rel.data[self.harness.charm.app],
             {"legend-sdlc-url": expected_url},
@@ -116,4 +140,11 @@ class LegendSdlcTestCase(legend_operator_testing.TestBaseFinosCoreServiceLegendC
         actual_url = self.harness.charm._get_sdlc_service_url()
 
         expected_url = "http://%s%s" % (hostname, charm.APPLICATION_ROOT_PATH)
+        self.assertEqual(expected_url, actual_url)
+
+        # Test with enable-tls set.
+        self.harness.update_config({"enable-tls": True})
+        actual_url = self.harness.charm._get_sdlc_service_url()
+
+        expected_url = "https://%s%s" % (hostname, charm.APPLICATION_ROOT_PATH)
         self.assertEqual(expected_url, actual_url)

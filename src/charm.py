@@ -134,10 +134,13 @@ class LegendSDLCServerCharm(legend_operator_base.BaseFinosLegendCoreServiceCharm
 
     def _get_sdlc_service_url(self):
         svc_hostname = self.model.config["external-hostname"] or self.app.name
+        schema = legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTP
+        if self.model.config["enable-tls"]:
+            schema = legend_operator_base.APPLICATION_CONNECTOR_TYPE_HTTPS
+
         return SDLC_SERVICE_URL_FORMAT % (
             {
-                # NOTE(aznashwan): we always return the plain HTTP endpoint:
-                "schema": "http",
+                "schema": schema,
                 "host": svc_hostname,
                 "path": APPLICATION_ROOT_PATH,
             }
